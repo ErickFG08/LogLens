@@ -3,8 +3,8 @@
 
 box::use(
   shiny[
-    NS, moduleServer, tagList, tags, div, icon,
-    checkboxGroupInput, textInput, reactive, req,
+    NS, moduleServer, tagList, tags, div, icon, span,
+    textInput, reactive, req,
     observe, observeEvent, reactiveVal,
     uiOutput, renderUI,
   ],
@@ -33,12 +33,20 @@ ui <- function(id) {
       class = "filter-bar",
       div(
         class = "filter-checks",
-        checkboxGroupInput(
-          ns("level_filter"),
-          label = NULL,
-          choices = c("ERROR", "WARN", "INFO", "DEBUG", "TRACE", "STDOUT", "STDERR"),
-          selected = c("ERROR", "WARN", "INFO", "DEBUG", "TRACE", "STDOUT", "STDERR"),
-          inline = TRUE
+        id = ns("filter_btns"),
+        lapply(c("ERROR", "WARN", "INFO", "DEBUG", "TRACE", "STDOUT", "STDERR"), function(lvl) {
+          tags$button(
+            type = "button",
+            class = paste0("filter-btn filter-", tolower(lvl), " active"),
+            `data-level` = lvl,
+            lvl
+          )
+        }),
+        # Hidden input to relay selected levels to Shiny
+        tags$input(
+          type = "hidden",
+          id = ns("level_filter"),
+          value = "ERROR,WARN,INFO,DEBUG,TRACE,STDOUT,STDERR"
         )
       ),
       div(
@@ -51,6 +59,30 @@ ui <- function(id) {
         )
       )
     ),
+    # ── JS: filter-button toggle logic ──────────────────────
+    tags$script(shiny::HTML(sprintf("
+      (function() {
+        document.addEventListener('DOMContentLoaded', function() {
+          var container = document.getElementById('%s');
+          if (!container) return;
+          var hiddenInput = document.getElementById('%s');
+
+          function syncInput() {
+            var active = container.querySelectorAll('.filter-btn.active');
+            var vals = Array.prototype.map.call(active, function(b) { return b.getAttribute('data-level'); });
+            hiddenInput.value = vals.join(',');
+            Shiny.setInputValue('%s', vals);
+          }
+
+          container.addEventListener('click', function(e) {
+            var btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+            btn.classList.toggle('active');
+            syncInput();
+          });
+        });
+      })();
+    ", ns("filter_btns"), ns("level_filter"), ns("level_filter")))),
 
     # ── Log table ────────────────────────────────────────────
     div(
@@ -74,8 +106,9 @@ server <- function(id, logs_reactive) {
       if (is.null(logs) || nrow(logs) == 0) return(logs)
 
       # Filter by level
-      if (!is.null(input$level_filter)) {
-        logs <- logs[logs$level %in% input$level_filter, ]
+      lvls <- input$level_filter
+      if (!is.null(lvls) && length(lvls) > 0) {
+        logs <- logs[logs$level %in% lvls, ]
       }
 
       # Filter by search text
@@ -200,8 +233,19 @@ server <- function(id, logs_reactive) {
           ),
           timestamp = colDef(
             name = "Timestamp",
-            width = 180,
-            style = list(color = "#64748b")
+            width = 170,
+            cell = JS("function(cellInfo) {
+              var raw = cellInfo.value;
+              if (!raw) return raw;
+              var d = new Date(raw);
+              if (isNaN(d)) return raw;
+              var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+              var date = months[d.getMonth()] + ' ' + d.getDate();
+              var time = ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2) + ':' + ('0'+d.getSeconds()).slice(-2);
+              return React.createElement('span', {
+                style: { color: '#64748b', whiteSpace: 'nowrap' }
+              }, date + ', ' + time);
+            }")
           ),
           source = colDef(show = FALSE),
           level = colDef(

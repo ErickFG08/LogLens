@@ -213,16 +213,22 @@ body {
 .connection-status {
   font-size: 0.78rem;
   font-weight: 600;
-  padding: 10px 14px;
+  min-height: 44px;
+  padding: 0 14px;
+  margin-bottom: 1.2rem;
   border-radius: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   letter-spacing: 0.01em;
+  line-height: 1;
+  text-align: center;
 
   .fa,
   .fas {
     font-size: 0.85rem;
+    line-height: 1;
   }
 
   &.connected {
@@ -432,92 +438,93 @@ body {
 
 .filter-checks {
   flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 
-  .shiny-input-container>.control-label {
-    display: none !important;
+// ── Filter toggle buttons ───────────────────────────────────
+.filter-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // ── OFF state (default) ──
+  background: transparent;
+  border: 1px dashed var(--chip-border);
+  color: var(--text-dim);
+  opacity: 0.45;
+  text-decoration: line-through;
+
+  &:hover {
+    opacity: 0.7;
+    text-decoration: none;
+    border-color: var(--chip-hover-border);
   }
 
-  .shiny-input-checkboxgroup {
-    display: flex !important;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin: 0;
+  // ── ON state ──
+  &.active {
+    opacity: 1;
+    text-decoration: none;
+    border-style: solid;
   }
+}
 
-  .checkbox-inline {
-    margin: 0 !important;
-    padding: 0 !important;
+// ── Per-level active colours ────────────────────────────────
+.filter-error.active {
+  background: rgba($error, 0.12);
+  border-color: rgba($error, 0.4);
+  color: $error;
+  box-shadow: 0 0 0 2px rgba($error, 0.1);
+}
 
-    input[type="checkbox"] {
-      display: none !important;
-    }
+.filter-warn.active {
+  background: rgba($warn, 0.12);
+  border-color: rgba($warn, 0.4);
+  color: $warn;
+  box-shadow: 0 0 0 2px rgba($warn, 0.1);
+}
 
-    label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: var(--text-dim);
-      padding: 5px 12px;
-      border-radius: 6px;
-      background: var(--chip-bg);
-      border: 1px solid var(--chip-border);
-      transition: all 0.2s ease;
-      cursor: pointer;
-      user-select: none;
-      letter-spacing: 0.03em;
-      display: inline-block;
+.filter-info.active {
+  background: rgba($info, 0.12);
+  border-color: rgba($info, 0.4);
+  color: $info;
+  box-shadow: 0 0 0 2px rgba($info, 0.1);
+}
 
-      &:hover {
-        background: var(--chip-hover-bg);
-        border-color: var(--chip-hover-border);
-        color: var(--text-muted);
-      }
-    }
-  }
+.filter-debug.active {
+  background: rgba($debug, 0.12);
+  border-color: rgba($debug, 0.4);
+  color: $debug;
+  box-shadow: 0 0 0 2px rgba($debug, 0.1);
+}
 
-  // Checked state — colour-coded per level
-  // NOTE: Shiny renders <input> INSIDE <label>, so use :has() instead of ~
-  .checkbox-inline:nth-child(1) label:has(input:checked) {
-    background: rgba($error, 0.08);
-    border-color: rgba($error, 0.25);
-    color: $error;
-  }
+.filter-trace.active {
+  background: rgba($trace, 0.12);
+  border-color: rgba($trace, 0.4);
+  color: darken($trace, 10%);
+  box-shadow: 0 0 0 2px rgba($trace, 0.1);
+}
 
-  .checkbox-inline:nth-child(2) label:has(input:checked) {
-    background: rgba($warn, 0.08);
-    border-color: rgba($warn, 0.25);
-    color: $warn;
-  }
+.filter-stdout.active {
+  background: rgba($stdout, 0.12);
+  border-color: rgba($stdout, 0.4);
+  color: $stdout;
+  box-shadow: 0 0 0 2px rgba($stdout, 0.1);
+}
 
-  .checkbox-inline:nth-child(3) label:has(input:checked) {
-    background: rgba($info, 0.08);
-    border-color: rgba($info, 0.25);
-    color: $info;
-  }
-
-  .checkbox-inline:nth-child(4) label:has(input:checked) {
-    background: rgba($debug, 0.08);
-    border-color: rgba($debug, 0.25);
-    color: $debug;
-  }
-
-  .checkbox-inline:nth-child(5) label:has(input:checked) {
-    background: rgba($trace, 0.08);
-    border-color: rgba($trace, 0.25);
-    color: darken($trace, 10%);
-  }
-
-  .checkbox-inline:nth-child(6) label:has(input:checked) {
-    background: rgba($stdout, 0.08);
-    border-color: rgba($stdout, 0.25);
-    color: $stdout;
-  }
-
-  .checkbox-inline:nth-child(7) label:has(input:checked) {
-    background: rgba($stderr, 0.08);
-    border-color: rgba($stderr, 0.25);
-    color: $stderr;
-  }
+.filter-stderr.active {
+  background: rgba($stderr, 0.12);
+  border-color: rgba($stderr, 0.4);
+  color: $stderr;
+  box-shadow: 0 0 0 2px rgba($stderr, 0.1);
 }
 
 .filter-search {
@@ -661,9 +668,4 @@ body {
 // ── Misc overrides ──────────────────────────────────────────
 .sidebar .shiny-input-container {
   margin-bottom: 0 !important;
-}
-
-.filter-checks .shiny-input-container {
-  margin-bottom: 0 !important;
-  width: auto !important;
 }

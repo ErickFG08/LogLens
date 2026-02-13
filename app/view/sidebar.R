@@ -95,13 +95,13 @@ server <- function(id) {
     output$connection_status <- renderUI({
       if (connected()) {
         div(
-          class = "sidebar-section connection-status connected",
-          icon("circle-check"), " Connected"
+          class = "connection-status connected",
+          icon("circle-check"), "Connected"
         )
       } else {
         div(
-          class = "sidebar-section connection-status disconnected",
-          icon("circle-xmark"), " Not connected"
+          class = "connection-status disconnected",
+          icon("circle-xmark"), "Not connected"
         )
       }
     })
