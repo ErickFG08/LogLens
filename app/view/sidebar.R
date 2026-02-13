@@ -160,7 +160,16 @@ server <- function(id) {
           date_str <- if (is.null(j$start_time)) {
             "unknown date"
           } else {
-            format(as.POSIXct(j$start_time), "%b %d, %H:%M")
+            # Try explicit ISO8601 parsing first
+            time_obj <- as.POSIXct(j$start_time, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+            # Fallback to default if that fails
+            if (is.na(time_obj)) time_obj <- as.POSIXct(j$start_time)
+            
+            # Format: 'Feb 13, 14:30' - converts to local time if intended, or keeps UTC if attributes set
+            # Actually format() on a POSIXct uses the tz attribute. 
+            # If we want local time displayed, we might want to convert or just show UTC.
+            # For now, let's stick to the resulting object's timezone (UTC).
+            format(time_obj, "%b %d, %H:%M")
           }
 
           # Raw status code
