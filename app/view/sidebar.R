@@ -163,18 +163,10 @@ server <- function(id) {
             format(as.POSIXct(j$start_time), "%b %d, %H:%M")
           }
 
-          # Map exit code to readable status
-          status_str <- if (is.null(j$status)) {
-            "\U2753"
-          } else if (j$status == 0) {
-            "\U2713 Success"
-          } else if (j$status == -1) {
-            "\U27F3 Running"
-          } else {
-            paste0("\U2717 Failed (", j$status, ")")
-          }
+          # Raw status code
+          status_str <- if (is.null(j$status)) "?" else as.character(j$status)
 
-          paste0("#", i, "  \U00B7  ", tag, "  \U00B7  ", date_str, "  \U00B7  ", status_str)
+          paste0("#", i, "  \U00B7  ", tag, "  \U00B7  ", date_str, "  \U00B7  exit: ", status_str)
         }, character(1))
 
         choices <- stats::setNames(seq_along(jl), job_labels)
