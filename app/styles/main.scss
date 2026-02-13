@@ -1,0 +1,669 @@
+// ═══════════════════════════════════════════════════════════
+// LogLens – Adaptive Theme (Light / Dark)
+// ═══════════════════════════════════════════════════════════
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+// ── CSS Custom Properties ───────────────────────────────────
+:root {
+  --bg-page: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #f8fafc;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
+  --text-primary: #1e293b;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.2);
+  --input-bg: #f8fafc;
+  --input-border: rgba(0, 0, 0, 0.1);
+  --input-focus-bg: #ffffff;
+  --chip-bg: rgba(0, 0, 0, 0.03);
+  --chip-border: rgba(0, 0, 0, 0.08);
+  --chip-hover-bg: rgba(0, 0, 0, 0.06);
+  --chip-hover-border: rgba(0, 0, 0, 0.12);
+  --summary-total-bg: rgba(0, 0, 0, 0.03);
+  --summary-total-border: rgba(0, 0, 0, 0.06);
+  --summary-total-color: #1e293b;
+  --table-text: #334155;
+  --table-border: rgba(0, 0, 0, 0.06);
+  --table-stripe: rgba(0, 0, 0, 0.02);
+  --table-highlight: rgba(0, 0, 0, 0.03);
+  --table-header-color: #64748b;
+  --table-header-border: rgba(0, 0, 0, 0.08);
+  --page-btn-bg: transparent;
+  --page-btn-hover-bg: rgba(0, 0, 0, 0.04);
+  --shadow-sm: rgba(0, 0, 0, 0.06);
+  --shadow-md: rgba(0, 0, 0, 0.04);
+  --shadow-lg: rgba(0, 0, 0, 0.03);
+  --notification-shadow: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --bg-page: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-card: #1e293b;
+  --bg-elevated: #334155;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --text-primary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.25);
+  --input-bg: #334155;
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-focus-bg: #475569;
+  --chip-bg: rgba(255, 255, 255, 0.06);
+  --chip-border: rgba(255, 255, 255, 0.1);
+  --chip-hover-bg: rgba(255, 255, 255, 0.1);
+  --chip-hover-border: rgba(255, 255, 255, 0.15);
+  --summary-total-bg: rgba(255, 255, 255, 0.06);
+  --summary-total-border: rgba(255, 255, 255, 0.08);
+  --summary-total-color: #e2e8f0;
+  --table-text: #cbd5e1;
+  --table-border: rgba(255, 255, 255, 0.06);
+  --table-stripe: rgba(255, 255, 255, 0.03);
+  --table-highlight: rgba(255, 255, 255, 0.05);
+  --table-header-color: #94a3b8;
+  --table-header-border: rgba(255, 255, 255, 0.08);
+  --page-btn-bg: transparent;
+  --page-btn-hover-bg: rgba(255, 255, 255, 0.08);
+  --shadow-sm: rgba(0, 0, 0, 0.3);
+  --shadow-md: rgba(0, 0, 0, 0.25);
+  --shadow-lg: rgba(0, 0, 0, 0.2);
+  --notification-shadow: rgba(0, 0, 0, 0.4);
+}
+
+// ── Semantic log-level colours (unchanged between themes) ───
+$error: #dc2626;
+$warn: #d97706;
+$info: #2563eb;
+$debug: #7c3aed;
+$trace: #6b7280;
+$stdout: #059669;
+$stderr: #e11d48;
+
+$accent-glow: rgba(37, 99, 235, 0.08);
+
+// ── Global ──────────────────────────────────────────────────
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+// ── App title / Navbar ──────────────────────────────────────
+.navbar {
+  background: var(--bg-surface) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  box-shadow: 0 1px 4px var(--shadow-sm);
+  padding: 10px 20px !important;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+
+  .title-icon {
+    font-size: 1.3rem;
+  }
+
+  .title-sub {
+    font-weight: 600;
+    font-size: 0.68rem;
+    color: $info;
+    margin-left: 2px;
+    padding: 3px 10px;
+    background: $accent-glow;
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+}
+
+// ── Theme toggle button ─────────────────────────────────────
+.theme-toggle {
+  margin-left: auto;
+  background: var(--chip-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--chip-hover-bg);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    transform: rotate(20deg) scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .theme-icon {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════════════════════════════
+.bslib-sidebar-layout>.sidebar {
+  background: var(--bg-surface) !important;
+  border-right: 1px solid var(--border-subtle) !important;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+
+.sidebar-section {
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.sidebar-heading {
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .fa,
+  .fas,
+  .far {
+    font-size: 0.6rem;
+    opacity: 0.6;
+  }
+}
+
+// Connection badge
+.connection-status {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.01em;
+
+  .fa,
+  .fas {
+    font-size: 0.85rem;
+  }
+
+  &.connected {
+    background: rgba(5, 150, 105, 0.08);
+    color: $stdout;
+    border: 1px solid rgba(5, 150, 105, 0.18);
+  }
+
+  &.disconnected {
+    background: rgba(220, 38, 38, 0.06);
+    color: $error;
+    border: 1px solid rgba(220, 38, 38, 0.15);
+  }
+}
+
+// Sidebar inputs
+.sidebar .form-control,
+.sidebar .form-select {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-primary) !important;
+  font-size: 0.8rem;
+  border-radius: 8px;
+  padding: 9px 12px;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: rgba(37, 99, 235, 0.4) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    background-color: var(--input-focus-bg) !important;
+  }
+
+  &::placeholder {
+    color: var(--text-dim);
+  }
+}
+
+// Fetch Logs button
+.btn-fetch {
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, $info, darken($info, 8%));
+  color: #fff;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, lighten($info, 6%), $info);
+    color: #fff;
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// LOG CARD (main panel)
+// ══════════════════════════════════════════════════════════════
+.log-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow: 0 1px 6px var(--shadow-md), 0 4px 24px var(--shadow-lg);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+
+.log-card-body {
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Log header ──────────────────────────────────────────────
+.log-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-elevated);
+  transition: background 0.35s ease;
+}
+
+.log-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .fa,
+  .fas {
+    color: $info;
+    font-size: 0.9rem;
+  }
+}
+
+// ── Summary boxes ───────────────────────────────────────────
+.summary-bar {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  background: var(--bg-elevated);
+  transition: background 0.35s ease;
+}
+
+.summary-bar.empty-state {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  flex-wrap: wrap;
+  background: transparent;
+
+  .empty-icon {
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  p {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+}
+
+.summary-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  border-radius: 10px;
+  flex: 1 1 0;
+  min-width: 0;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-sm);
+  }
+}
+
+.summary-count {
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.2;
+}
+
+.summary-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+
+// ── Filter bar ──────────────────────────────────────────────
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  transition: background 0.35s ease;
+}
+
+.filter-checks {
+  flex: 1;
+
+  .shiny-input-container>.control-label {
+    display: none !important;
+  }
+
+  .shiny-input-checkboxgroup {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 0;
+  }
+
+  .checkbox-inline {
+    margin: 0 !important;
+    padding: 0 !important;
+
+    input[type="checkbox"] {
+      display: none !important;
+    }
+
+    label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      padding: 5px 12px;
+      border-radius: 6px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      letter-spacing: 0.03em;
+      display: inline-block;
+
+      &:hover {
+        background: var(--chip-hover-bg);
+        border-color: var(--chip-hover-border);
+        color: var(--text-muted);
+      }
+    }
+  }
+
+  // Checked state — colour-coded per level
+  // NOTE: Shiny renders <input> INSIDE <label>, so use :has() instead of ~
+  .checkbox-inline:nth-child(1) label:has(input:checked) {
+    background: rgba($error, 0.08);
+    border-color: rgba($error, 0.25);
+    color: $error;
+  }
+
+  .checkbox-inline:nth-child(2) label:has(input:checked) {
+    background: rgba($warn, 0.08);
+    border-color: rgba($warn, 0.25);
+    color: $warn;
+  }
+
+  .checkbox-inline:nth-child(3) label:has(input:checked) {
+    background: rgba($info, 0.08);
+    border-color: rgba($info, 0.25);
+    color: $info;
+  }
+
+  .checkbox-inline:nth-child(4) label:has(input:checked) {
+    background: rgba($debug, 0.08);
+    border-color: rgba($debug, 0.25);
+    color: $debug;
+  }
+
+  .checkbox-inline:nth-child(5) label:has(input:checked) {
+    background: rgba($trace, 0.08);
+    border-color: rgba($trace, 0.25);
+    color: darken($trace, 10%);
+  }
+
+  .checkbox-inline:nth-child(6) label:has(input:checked) {
+    background: rgba($stdout, 0.08);
+    border-color: rgba($stdout, 0.25);
+    color: $stdout;
+  }
+
+  .checkbox-inline:nth-child(7) label:has(input:checked) {
+    background: rgba($stderr, 0.08);
+    border-color: rgba($stderr, 0.25);
+    color: $stderr;
+  }
+}
+
+.filter-search {
+  width: 220px;
+  flex-shrink: 0;
+
+  .shiny-input-container {
+    margin-bottom: 0 !important;
+
+    >.control-label {
+      display: none !important;
+    }
+  }
+
+  .form-control {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-primary) !important;
+    font-size: 0.78rem;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: 'Inter', sans-serif;
+
+    &::placeholder {
+      color: var(--text-dim);
+    }
+
+    &:focus {
+      border-color: rgba(37, 99, 235, 0.4) !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08) !important;
+    }
+  }
+}
+
+// ── Log table ───────────────────────────────────────────────
+.log-table-container {
+  padding: 0;
+  flex: 1;
+  overflow: auto;
+
+  .rt-table {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  .rt-pagination {
+    padding: 10px 20px;
+    border-top: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  .rt-page-button {
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    background: var(--page-btn-bg);
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--page-btn-hover-bg);
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    &[aria-current="page"] {
+      background: $info;
+      color: #fff;
+      border-color: $info;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+    }
+  }
+
+  .rt-page-size-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.78rem;
+  }
+}
+
+// ── Dark-mode readability overrides for reactable ───────────
+// Reactable's R-side theme applies hardcoded inline styles that
+// don't adapt to dark mode, so we must override with !important.
+[data-theme="dark"] .log-table-container {
+  .ReactTable {
+    color: #e2e8f0 !important;
+  }
+
+  .rt-thead .rt-th {
+    color: #94a3b8 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .rt-td {
+    color: #cbd5e1 !important;
+  }
+
+  .rt-pagination {
+    color: #94a3b8 !important;
+  }
+
+  .rt-page-size-select {
+    background: #334155 !important;
+    color: #94a3b8 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+// ── Notification styling ────────────────────────────────────
+.shiny-notification {
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: 0 8px 32px var(--notification-shadow);
+  font-size: 0.85rem;
+}
+
+// ── Scrollbar ───────────────────────────────────────────────
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+}
+
+// ── Misc overrides ──────────────────────────────────────────
+.sidebar .shiny-input-container {
+  margin-bottom: 0 !important;
+}
+
+.filter-checks .shiny-input-container {
+  margin-bottom: 0 !important;
+  width: auto !important;
+}
