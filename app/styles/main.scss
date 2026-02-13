@@ -196,7 +196,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 0.7rem;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -206,6 +206,42 @@ body {
   .far {
     font-size: 0.6rem;
     opacity: 0.6;
+  }
+}
+
+.sidebar-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.btn-refresh {
+  background: rgba($info, 0.1);
+  border: 1px solid rgba($info, 0.25);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: $info;
+  font-size: 0.72rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba($info, 0.18);
+    border-color: rgba($info, 0.4);
+    color: $info;
+    transform: rotate(90deg);
+    box-shadow: 0 0 0 3px rgba($info, 0.1);
+  }
+
+  &:active {
+    transform: rotate(180deg) scale(0.95);
   }
 }
 
@@ -636,15 +672,7 @@ body {
   }
 }
 
-// ── Notification styling ────────────────────────────────────
-.shiny-notification {
-  border-radius: 10px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  box-shadow: 0 8px 32px var(--notification-shadow);
-  font-size: 0.85rem;
-}
+
 
 // ── Scrollbar ───────────────────────────────────────────────
 ::-webkit-scrollbar {

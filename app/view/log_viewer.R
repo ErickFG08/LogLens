@@ -205,31 +205,31 @@ server <- function(id, logs_reactive) {
         showPageSizeOptions = TRUE,
         pageSizeOptions = c(50, 100, 250, 500),
         theme = reactable::reactableTheme(
-          color = "#334155",
+          color = "var(--table-text)",
           backgroundColor = "transparent",
-          borderColor = "rgba(0,0,0,0.06)",
-          stripedColor = "rgba(0,0,0,0.02)",
-          highlightColor = "rgba(0,0,0,0.03)",
+          borderColor = "var(--table-border)",
+          stripedColor = "var(--table-stripe)",
+          highlightColor = "var(--table-highlight)",
           headerStyle = list(
-            color = "#64748b",
+            color = "var(--table-header-color)",
             fontWeight = 600,
             fontSize = "11px",
             textTransform = "uppercase",
             letterSpacing = "0.05em",
-            borderBottomColor = "rgba(0,0,0,0.08)"
+            borderBottomColor = "var(--table-header-border)"
           ),
           cellStyle = list(
             fontFamily = "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
             fontSize = "12.5px",
             lineHeight = "1.6"
           ),
-          paginationStyle = list(color = "#64748b")
+          paginationStyle = list(color = "var(--text-muted)")
         ),
         columns = list(
           line_number = colDef(
             name = "#",
             width = 60,
-            style = list(color = "#94a3b8", fontWeight = 500)
+            style = list(color = "var(--text-dim)", fontWeight = 500)
           ),
           timestamp = colDef(
             name = "Timestamp",
@@ -243,7 +243,7 @@ server <- function(id, logs_reactive) {
               var date = months[d.getMonth()] + ' ' + d.getDate();
               var time = ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2) + ':' + ('0'+d.getSeconds()).slice(-2);
               return React.createElement('span', {
-                style: { color: '#64748b', whiteSpace: 'nowrap' }
+                style: { color: 'var(--text-muted)', whiteSpace: 'nowrap' }
               }, date + ', ' + time);
             }")
           ),
@@ -252,16 +252,17 @@ server <- function(id, logs_reactive) {
             name = "Level",
             width = 90,
             cell = JS("function(cellInfo) {
-              const colors = {
-                'ERROR':  { bg: 'rgba(220,38,38,0.1)', fg: '#dc2626' },
-                'WARN':   { bg: 'rgba(217,119,6,0.1)', fg: '#d97706' },
-                'INFO':   { bg: 'rgba(37,99,235,0.08)', fg: '#2563eb' },
-                'DEBUG':  { bg: 'rgba(124,58,237,0.08)', fg: '#7c3aed' },
-                'TRACE':  { bg: 'rgba(107,114,128,0.08)', fg: '#6b7280' },
-                'STDERR': { bg: 'rgba(225,29,72,0.08)', fg: '#e11d48' },
-                'STDOUT': { bg: 'rgba(5,150,105,0.08)', fg: '#059669' }
+              var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+              var colors = {
+                'ERROR':  { bg: 'rgba(220,38,38,' + (isDark ? '0.2' : '0.1') + ')', fg: isDark ? '#f87171' : '#dc2626' },
+                'WARN':   { bg: 'rgba(217,119,6,' + (isDark ? '0.2' : '0.1') + ')', fg: isDark ? '#fbbf24' : '#d97706' },
+                'INFO':   { bg: 'rgba(37,99,235,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#60a5fa' : '#2563eb' },
+                'DEBUG':  { bg: 'rgba(124,58,237,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#a78bfa' : '#7c3aed' },
+                'TRACE':  { bg: 'rgba(107,114,128,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#9ca3af' : '#6b7280' },
+                'STDERR': { bg: 'rgba(225,29,72,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#fb7185' : '#e11d48' },
+                'STDOUT': { bg: 'rgba(5,150,105,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#34d399' : '#059669' }
               };
-              const c = colors[cellInfo.value] || { bg: 'rgba(0,0,0,0.04)', fg: '#64748b' };
+              var c = colors[cellInfo.value] || { bg: 'rgba(0,0,0,0.04)', fg: 'var(--text-muted)' };
               return React.createElement('span', {
                 style: {
                   backgroundColor: c.bg,
@@ -280,22 +281,24 @@ server <- function(id, logs_reactive) {
             name = "Message",
             minWidth = 400,
             style = JS("function(rowInfo) {
-              const level = rowInfo.row['level'];
-              const opacityMap = {
-                'ERROR': 'rgba(220, 38, 38, 0.04)',
-                'WARN': 'rgba(217, 119, 6, 0.04)',
-                'STDERR': 'rgba(225, 29, 72, 0.04)'
+              var level = rowInfo.row['level'];
+              var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+              var opacityMap = {
+                'ERROR': 'rgba(220, 38, 38, ' + (isDark ? '0.08' : '0.04') + ')',
+                'WARN': 'rgba(217, 119, 6, ' + (isDark ? '0.08' : '0.04') + ')',
+                'STDERR': 'rgba(225, 29, 72, ' + (isDark ? '0.08' : '0.04') + ')'
               };
-              const bg = opacityMap[level] || 'transparent';
-              return { backgroundColor: bg };
+              var bg = opacityMap[level] || 'transparent';
+              return { backgroundColor: bg, color: 'var(--table-text)' };
             }")
           )
         ),
         rowStyle = JS("function(rowInfo) {
-          const level = rowInfo.row['level'];
-          if (level === 'ERROR') return { borderLeft: '3px solid #dc2626' };
-          if (level === 'WARN') return { borderLeft: '3px solid #d97706' };
-          if (level === 'STDERR') return { borderLeft: '3px solid #e11d48' };
+          var level = rowInfo.row['level'];
+          var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          if (level === 'ERROR') return { borderLeft: '3px solid ' + (isDark ? '#f87171' : '#dc2626') };
+          if (level === 'WARN') return { borderLeft: '3px solid ' + (isDark ? '#fbbf24' : '#d97706') };
+          if (level === 'STDERR') return { borderLeft: '3px solid ' + (isDark ? '#fb7185' : '#e11d48') };
           return { borderLeft: '3px solid transparent' };
         }")
       )

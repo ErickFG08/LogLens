@@ -20,7 +20,16 @@ ui <- function(id) {
     # ── Content selector ─────────────────────────────────────
     tags$div(
       class = "sidebar-section",
-      tags$h6(class = "sidebar-heading", icon("cubes"), " Content"),
+      div(
+        class = "sidebar-heading-row",
+        tags$h6(class = "sidebar-heading", icon("cubes"), " Content"),
+        actionButton(
+          ns("btn_refresh_content"),
+          label = NULL,
+          icon = icon("arrows-rotate"),
+          class = "btn-refresh"
+        )
+      ),
       selectInput(
         ns("content_picker"),
         label = NULL,
@@ -68,19 +77,21 @@ server <- function(id) {
     parsed_logs <- reactiveVal(NULL)
     connected <- reactiveVal(FALSE)
 
-    # ── Auto-connect on startup using env vars ─────────────────
-    observe({
+    # ── Helper: fetch content list and update picker ───────────
+    refresh_content <- function() {
       tryCatch({
-        cli <- create_client()
-        client(cli)
-        connected(TRUE)
+        cli <- client()
+        if (is.null(cli)) {
+          cli <- create_client()
+          client(cli)
+          connected(TRUE)
+        }
 
-        # Fetch content list
         ct <- list_content(cli)
         content_df(ct)
 
-        choices <- stats::setNames(ct$guid, ct$display_name)
-        updateSelectInput(session, "content_picker", choices = choices, selected = "new-user-metrics")
+        choices <- c("Select content..." = "", stats::setNames(ct$guid, ct$display_name))
+        updateSelectInput(session, "content_picker", choices = choices)
       }, error = function(e) {
         connected(FALSE)
         showNotification(
@@ -89,7 +100,21 @@ server <- function(id) {
           duration = 10
         )
       })
+    }
+
+    # ── Auto-connect on startup using env vars ─────────────────
+    observe({
+      refresh_content()
     }) |> shiny::bindEvent(TRUE, once = TRUE)
+
+    # ── Refresh content button ─────────────────────────────────
+    observeEvent(input$btn_refresh_content, {
+      updateSelectInput(session, "content_picker", choices = c("Refreshing..." = ""))
+      updateSelectInput(session, "job_picker", choices = c("Select content first..." = ""))
+      jobs_list(NULL)
+      parsed_logs(NULL)
+      refresh_content()
+    })
 
     # ── Connection status badge ────────────────────────────────
     output$connection_status <- renderUI({
@@ -109,6 +134,12 @@ server <- function(id) {
     # ── Content selected → fetch jobs ──────────────────────────
     observeEvent(input$content_picker, {
       req(input$content_picker, client())
+
+      # Reset job picker and clear stale logs immediately
+      updateSelectInput(session, "job_picker", choices = c("Loading jobs..." = ""))
+      jobs_list(NULL)
+      parsed_logs(NULL)
+
       tryCatch({
         jl <- list_jobs(client(), input$content_picker)
         jobs_list(jl)
@@ -121,13 +152,29 @@ server <- function(id) {
         # Build labels from job metadata
         job_labels <- vapply(seq_along(jl), function(i) {
           j <- jl[[i]]
-          label <- paste0(
-            "#", i, " | ",
-            ifelse(is.null(j$tag), "run", j$tag), " | ",
-            ifelse(is.null(j$start_time), "?", format(as.POSIXct(j$start_time), "%Y-%m-%d %H:%M")), " | ",
-            ifelse(is.null(j$status), "?", j$status)
-          )
-          label
+
+          # Friendly tag
+          tag <- if (is.null(j$tag)) "run" else j$tag
+
+          # Friendly date
+          date_str <- if (is.null(j$start_time)) {
+            "unknown date"
+          } else {
+            format(as.POSIXct(j$start_time), "%b %d, %H:%M")
+          }
+
+          # Map exit code to readable status
+          status_str <- if (is.null(j$status)) {
+            "\U2753"
+          } else if (j$status == 0) {
+            "\U2713 Success"
+          } else if (j$status == -1) {
+            "\U27F3 Running"
+          } else {
+            paste0("\U2717 Failed (", j$status, ")")
+          }
+
+          paste0("#", i, "  \U00B7  ", tag, "  \U00B7  ", date_str, "  \U00B7  ", status_str)
         }, character(1))
 
         choices <- stats::setNames(seq_along(jl), job_labels)
