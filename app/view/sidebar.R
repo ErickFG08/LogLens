@@ -172,10 +172,7 @@ server <- function(id) {
             format(time_obj, "%b %d, %H:%M")
           }
 
-          # Raw status code
-          status_str <- if (is.null(j$status)) "?" else as.character(j$status)
-
-          paste0("#", i, "  \U00B7  ", tag, "  \U00B7  ", date_str, "  \U00B7  exit: ", status_str)
+          paste0("#", i, "  \U00B7  ", tag, "  \U00B7  ", date_str)
         }, character(1))
 
         choices <- stats::setNames(seq_along(jl), job_labels)
