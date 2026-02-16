@@ -9,6 +9,11 @@ box::use(
     uiOutput, renderUI,
   ],
   reactable[reactable, reactableOutput, renderReactable, colDef, JS],
+  
+)
+
+box::use(
+  app/logic/log_parser[level_colors],
 )
 
 #' @export
@@ -96,9 +101,6 @@ ui <- function(id) {
 server <- function(id, logs_reactive) {
   moduleServer(id, function(input, output, session) {
 
-    box::use(
-      app/logic/log_parser[level_colors],
-    )
 
     filtered_logs <- reactive({
       req(logs_reactive())

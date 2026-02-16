@@ -10,6 +10,12 @@ box::use(
   ],
 )
 
+box::use(
+  app/logic/connect_api[create_client, list_content, list_jobs, fetch_log],
+  app/logic/job_time[format_job_start_time],
+  app/logic/log_parser[parse_log],
+)
+
 #' @export
 ui <- function(id) {
   ns <- NS(id)
@@ -65,11 +71,6 @@ ui <- function(id) {
 server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
-    box::use(
-      app/logic/connect_api[create_client, list_content, list_jobs, fetch_log],
-      app/logic/log_parser[parse_log],
-    )
 
     client <- reactiveVal(NULL)
     content_df <- reactiveVal(NULL)
@@ -157,20 +158,7 @@ server <- function(id) {
           tag <- if (is.null(j$tag)) "run" else j$tag
 
           # Friendly date
-          date_str <- if (is.null(j$start_time)) {
-            "unknown date"
-          } else {
-            # Try explicit ISO8601 parsing first
-            time_obj <- as.POSIXct(j$start_time, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
-            # Fallback to default if that fails
-            if (is.na(time_obj)) time_obj <- as.POSIXct(j$start_time)
-            
-            # Format: 'Feb 13, 14:30' - converts to local time if intended, or keeps UTC if attributes set
-            # Actually format() on a POSIXct uses the tz attribute. 
-            # If we want local time displayed, we might want to convert or just show UTC.
-            # For now, let's stick to the resulting object's timezone (UTC).
-            format(time_obj, "%b %d, %H:%M")
-          }
+          date_str <- format_job_start_time(j$start_time)
 
           paste0("#", i, "  \U00B7  ", tag, "  \U00B7  ", date_str)
         }, character(1))
