@@ -7,9 +7,11 @@ box::use(
     textInput, reactive, req,
     observe, observeEvent, reactiveVal,
     uiOutput, renderUI,
+    downloadButton, downloadHandler,
   ],
   reactable[reactable, reactableOutput, renderReactable, colDef, JS],
-  
+  utils[write.csv],
+  writexl[write_xlsx],
 )
 
 box::use(
@@ -61,6 +63,19 @@ ui <- function(id) {
           label = NULL,
           placeholder = "Search logs...",
           width = "100%"
+        )
+      ),
+      div(
+        class = "export-buttons",
+        downloadButton(
+          ns("export_csv"),
+          label = tags$span(icon("file-csv"), " CSV"),
+          class = "btn-export btn-export-csv"
+        ),
+        downloadButton(
+          ns("export_excel"),
+          label = tags$span(icon("file-excel"), " Excel"),
+          class = "btn-export btn-export-excel"
         )
       )
     ),
@@ -202,7 +217,7 @@ server <- function(id, logs_reactive) {
         borderless = TRUE,
         striped = FALSE,
         highlight = TRUE,
-        defaultPageSize = 100,
+        defaultPageSize = 500,
         paginationType = "jump",
         showPageSizeOptions = TRUE,
         pageSizeOptions = c(50, 100, 250, 500),
@@ -305,5 +320,33 @@ server <- function(id, logs_reactive) {
         }")
       )
     })
+
+    # ── Export: CSV ─────────────────────────────────────────────
+    output$export_csv <- downloadHandler(
+      filename = function() {
+        paste0("loglens_export_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".csv")
+      },
+      content = function(file) {
+        logs <- filtered_logs()
+        if (is.null(logs) || nrow(logs) == 0) {
+          logs <- data.frame(message = "No log entries to export.")
+        }
+        write.csv(logs, file, row.names = FALSE)
+      }
+    )
+
+    # ── Export: Excel ──────────────────────────────────────────
+    output$export_excel <- downloadHandler(
+      filename = function() {
+        paste0("loglens_export_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".xlsx")
+      },
+      content = function(file) {
+        logs <- filtered_logs()
+        if (is.null(logs) || nrow(logs) == 0) {
+          logs <- data.frame(message = "No log entries to export.")
+        }
+        write_xlsx(logs, file)
+      }
+    )
   })
 }

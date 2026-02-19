@@ -603,10 +603,71 @@ body {
   }
 }
 
+// ── Export buttons ──────────────────────────────────────────
+.export-buttons {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-export {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--chip-bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+
+  .fa, .fas {
+    font-size: 0.8rem;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px var(--shadow-sm);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+    background: var(--chip-hover-bg);
+    text-decoration: none;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-export-csv {
+  &:hover {
+    background: rgba($stdout, 0.1);
+    border-color: rgba($stdout, 0.35);
+    color: $stdout;
+    box-shadow: 0 3px 10px rgba($stdout, 0.12);
+  }
+}
+
+.btn-export-excel {
+  &:hover {
+    background: rgba(#0d9488, 0.1);
+    border-color: rgba(#0d9488, 0.35);
+    color: #0d9488;
+    box-shadow: 0 3px 10px rgba(#0d9488, 0.12);
+  }
+}
+
 // ── Log table ───────────────────────────────────────────────
 .log-table-container {
   padding: 0;
   flex: 1;
+  min-height: 600px;
   overflow: auto;
 
   .rt-table {
