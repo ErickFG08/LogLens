@@ -1,11 +1,11 @@
 box::use(
-  shiny[bootstrapPage, div, moduleServer, NS, tags],
-  bslib[page_sidebar, sidebar, card, card_header, card_body, bs_theme],
+  bslib[bs_theme, card, card_body, page_sidebar, sidebar],
+  shiny[div, moduleServer, NS, tags],
 )
 
 box::use(
-  app/view/sidebar,
   app/view/log_viewer,
+  app/view/sidebar,
 )
 
 #' @export

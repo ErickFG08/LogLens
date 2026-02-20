@@ -1,6 +1,10 @@
 # Logic: Parse and classify log lines
 # https://go.appsilon.com/rhino-project-structure
 
+box::use(
+  dplyr[case_when],
+)
+
 #' Classify a log message into a severity level
 #'
 #' Inspects the message text for known keywords (ERROR, WARN, INFO, DEBUG, TRACE).
@@ -13,7 +17,7 @@
 classify_level <- function(message, source) {
   msg_upper <- toupper(message)
 
-  dplyr::case_when(
+  case_when(
     grepl("\\bERROR\\b|\\bFATAL\\b|\\bCRITICAL\\b", msg_upper) ~ "ERROR",
     grepl("\\bWARN(ING)?\\b", msg_upper) ~ "WARN",
     grepl("\\bINFO\\b", msg_upper) ~ "INFO",
@@ -58,7 +62,7 @@ parse_log <- function(log_df) {
 #' @return Character. CSS class name.
 #' @export
 level_css_class <- function(level) {
-  dplyr::case_when(
+  case_when(
     level == "ERROR" ~ "log-error",
     level == "WARN" ~ "log-warn",
     level == "INFO" ~ "log-info",

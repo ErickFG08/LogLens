@@ -2,16 +2,20 @@
 # https://go.appsilon.com/rhino-project-structure
 
 box::use(
-  shiny[
-    NS, moduleServer, tagList, tags, div, icon,
-    actionButton, selectInput,
-    observeEvent, reactiveVal, reactive, req, updateSelectInput,
-    showNotification, observe, uiOutput, renderUI,
-  ],
+  shiny[actionButton, div, icon, moduleServer, NS, observe, observeEvent, reactive],
 )
 
 box::use(
-  app/logic/connect_api[create_client, list_content, list_jobs, fetch_log],
+  shiny[bindEvent, reactiveVal, renderUI, req, selectInput, showNotification, tagList, tags],
+)
+
+box::use(
+  shiny[uiOutput, updateSelectInput],
+  stats[setNames],
+)
+
+box::use(
+  app/logic/connect_api[create_client, fetch_log, list_content, list_jobs],
   app/logic/job_time[format_job_start_time],
   app/logic/log_parser[parse_log],
 )
@@ -91,7 +95,7 @@ server <- function(id) {
         ct <- list_content(cli)
         content_df(ct)
 
-        choices <- c("Select content..." = "", stats::setNames(ct$guid, ct$display_name))
+        choices <- c("Select content..." = "", setNames(ct$guid, ct$display_name))
         updateSelectInput(session, "content_picker", choices = choices)
       }, error = function(e) {
         connected(FALSE)
@@ -106,7 +110,7 @@ server <- function(id) {
     # ── Auto-connect on startup using env vars ─────────────────
     observe({
       refresh_content()
-    }) |> shiny::bindEvent(TRUE, once = TRUE)
+    }) |> bindEvent(TRUE, once = TRUE)
 
     # ── Refresh content button ─────────────────────────────────
     observeEvent(input$btn_refresh_content, {
@@ -163,7 +167,7 @@ server <- function(id) {
           paste0("#", i, "  \U00B7  ", tag, "  \U00B7  ", date_str)
         }, character(1))
 
-        choices <- stats::setNames(seq_along(jl), job_labels)
+        choices <- setNames(seq_along(jl), job_labels)
         updateSelectInput(session, "job_picker", choices = choices)
       }, error = function(e) {
         showNotification(
@@ -198,6 +202,8 @@ server <- function(id) {
     })
 
     # Return parsed logs as a reactive for log_viewer to consume
-    reactive({ parsed_logs() })
+    reactive({
+      parsed_logs()
+    })
   })
 }

@@ -2,7 +2,7 @@
 # https://go.appsilon.com/rhino-project-structure
 
 box::use(
-  connectapi[connect, get_content, content_item, get_job_list, get_log],
+  connectapi[connect, content_item, get_content, get_job_list, get_log],
 )
 
 #' Create a connection to Posit Connect

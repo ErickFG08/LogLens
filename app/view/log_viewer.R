@@ -2,20 +2,14 @@
 # https://go.appsilon.com/rhino-project-structure
 
 box::use(
-  shiny[
-    NS, moduleServer, tagList, tags, div, icon, span,
-    textInput, reactive, req,
-    observe, observeEvent, reactiveVal,
-    uiOutput, renderUI,
-    downloadButton, downloadHandler,
-  ],
-  reactable[reactable, reactableOutput, renderReactable, colDef, JS],
-  utils[write.csv],
-  writexl[write_xlsx],
+  reactable[colDef, JS, reactable, reactableOutput, reactableTheme, renderReactable],
+  shiny[div, downloadButton, downloadHandler, HTML, icon, moduleServer, NS, reactive],
 )
 
 box::use(
-  app/logic/log_parser[level_colors],
+  shiny[renderUI, req, tagList, tags, textInput, uiOutput],
+  utils[write.csv],
+  writexl[write_xlsx],
 )
 
 #' @export
@@ -80,7 +74,7 @@ ui <- function(id) {
       )
     ),
     # ── JS: filter-button toggle logic ──────────────────────
-    tags$script(shiny::HTML(sprintf("
+    tags$script(HTML(sprintf("
       (function() {
         document.addEventListener('DOMContentLoaded', function() {
           var container = document.getElementById('%s');
@@ -181,7 +175,10 @@ server <- function(id, logs_reactive) {
         # Total badge
         div(
           class = "summary-box",
-          style = "background: var(--summary-total-bg); color: var(--summary-total-color); border: 1px solid var(--summary-total-border);",
+          style = paste(
+            "background: var(--summary-total-bg); color: var(--summary-total-color);",
+            "border: 1px solid var(--summary-total-border);"
+          ),
           div(class = "summary-count", nrow(logs)),
           div(class = "summary-label", "TOTAL")
         ),
@@ -222,7 +219,7 @@ server <- function(id, logs_reactive) {
         paginationType = "jump",
         showPageSizeOptions = TRUE,
         pageSizeOptions = c(50, 100, 250, 500),
-        theme = reactable::reactableTheme(
+        theme = reactableTheme(
           color = "var(--table-text)",
           backgroundColor = "transparent",
           borderColor = "var(--table-border)",
@@ -259,7 +256,9 @@ server <- function(id, logs_reactive) {
               if (isNaN(d)) return raw;
               var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
               var date = months[d.getMonth()] + ' ' + d.getDate();
-              var time = ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2) + ':' + ('0'+d.getSeconds()).slice(-2);
+              var time = ('0'+d.getHours()).slice(-2) + ':' +
+                         ('0'+d.getMinutes()).slice(-2) + ':' +
+                         ('0'+d.getSeconds()).slice(-2);
               return React.createElement('span', {
                 style: { color: 'var(--text-muted)', whiteSpace: 'nowrap' }
               }, date + ', ' + time);
@@ -272,13 +271,34 @@ server <- function(id, logs_reactive) {
             cell = JS("function(cellInfo) {
               var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
               var colors = {
-                'ERROR':  { bg: 'rgba(220,38,38,' + (isDark ? '0.2' : '0.1') + ')', fg: isDark ? '#f87171' : '#dc2626' },
-                'WARN':   { bg: 'rgba(217,119,6,' + (isDark ? '0.2' : '0.1') + ')', fg: isDark ? '#fbbf24' : '#d97706' },
-                'INFO':   { bg: 'rgba(37,99,235,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#60a5fa' : '#2563eb' },
-                'DEBUG':  { bg: 'rgba(124,58,237,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#a78bfa' : '#7c3aed' },
-                'TRACE':  { bg: 'rgba(107,114,128,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#9ca3af' : '#6b7280' },
-                'STDERR': { bg: 'rgba(225,29,72,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#fb7185' : '#e11d48' },
-                'STDOUT': { bg: 'rgba(5,150,105,' + (isDark ? '0.2' : '0.08') + ')', fg: isDark ? '#34d399' : '#059669' }
+                'ERROR':  {
+                  bg: 'rgba(220,38,38,' + (isDark ? '0.2' : '0.1') + ')',
+                  fg: isDark ? '#f87171' : '#dc2626'
+                },
+                'WARN':   {
+                  bg: 'rgba(217,119,6,' + (isDark ? '0.2' : '0.1') + ')',
+                  fg: isDark ? '#fbbf24' : '#d97706'
+                },
+                'INFO':   {
+                  bg: 'rgba(37,99,235,' + (isDark ? '0.2' : '0.08') + ')',
+                  fg: isDark ? '#60a5fa' : '#2563eb'
+                },
+                'DEBUG':  {
+                  bg: 'rgba(124,58,237,' + (isDark ? '0.2' : '0.08') + ')',
+                  fg: isDark ? '#a78bfa' : '#7c3aed'
+                },
+                'TRACE':  {
+                  bg: 'rgba(107,114,128,' + (isDark ? '0.2' : '0.08') + ')',
+                  fg: isDark ? '#9ca3af' : '#6b7280'
+                },
+                'STDERR': {
+                  bg: 'rgba(225,29,72,' + (isDark ? '0.2' : '0.08') + ')',
+                  fg: isDark ? '#fb7185' : '#e11d48'
+                },
+                'STDOUT': {
+                  bg: 'rgba(5,150,105,' + (isDark ? '0.2' : '0.08') + ')',
+                  fg: isDark ? '#34d399' : '#059669'
+                }
               };
               var c = colors[cellInfo.value] || { bg: 'rgba(0,0,0,0.04)', fg: 'var(--text-muted)' };
               return React.createElement('span', {
