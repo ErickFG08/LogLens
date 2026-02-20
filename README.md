@@ -205,7 +205,3 @@ The GitHub Actions workflow (`.github/workflows/rhino-test.yml`) runs automatica
 5. Push to your branch and open a Pull Request
 
 ---
-
-<p align="center">
-  Built with ❤️ using <a href="https://appsilon.github.io/rhino/">Rhino</a> by <a href="https://appsilon.com/">Appsilon</a>
-</p>
