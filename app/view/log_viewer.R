@@ -217,6 +217,7 @@ server <- function(id, logs_reactive) {
         borderless = TRUE,
         striped = FALSE,
         highlight = TRUE,
+        defaultSorted = list(line_number = "desc"),
         defaultPageSize = 500,
         paginationType = "jump",
         showPageSizeOptions = TRUE,
