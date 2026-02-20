@@ -6,7 +6,8 @@ box::use(
 )
 
 box::use(
-  shiny[bindEvent, reactiveVal, renderUI, req, selectInput, showNotification, tagList, tags],
+  shiny[bindEvent, reactiveVal, renderUI, req, selectInput, tagList, tags],
+  shinyWidgets[show_toast],
 )
 
 box::use(
@@ -99,10 +100,12 @@ server <- function(id) {
         updateSelectInput(session, "content_picker", choices = choices)
       }, error = function(e) {
         connected(FALSE)
-        showNotification(
-          paste("Connection failed. Check CONNECT_SERVER and CONNECT_API_KEY env vars:", conditionMessage(e)),
+        show_toast(
+          title = "Connection failed",
+          text = paste("Check CONNECT_SERVER and CONNECT_API_KEY env vars:", conditionMessage(e)),
           type = "error",
-          duration = 10
+          timer = 10000,
+          position = "top-end"
         )
       })
     }
@@ -170,10 +173,12 @@ server <- function(id) {
         choices <- setNames(seq_along(jl), job_labels)
         updateSelectInput(session, "job_picker", choices = choices)
       }, error = function(e) {
-        showNotification(
-          paste("Failed to load jobs:", conditionMessage(e)),
+        show_toast(
+          title = "Error",
+          text = paste("Failed to load jobs:", conditionMessage(e)),
           type = "error",
-          duration = 5
+          timer = 5000,
+          position = "top-end"
         )
       })
     })
@@ -187,16 +192,20 @@ server <- function(id) {
         raw_log <- fetch_log(job)
         parsed <- parse_log(raw_log)
         parsed_logs(parsed)
-        showNotification(
-          paste("Loaded", nrow(parsed), "log lines"),
-          type = "message",
-          duration = 3
+        show_toast(
+          title = "Success",
+          text = paste("Loaded", nrow(parsed), "log lines"),
+          type = "success",
+          timer = 3000,
+          position = "top-end"
         )
       }, error = function(e) {
-        showNotification(
-          paste("Failed to fetch logs:", conditionMessage(e)),
+        show_toast(
+          title = "Error",
+          text = paste("Failed to fetch logs:", conditionMessage(e)),
           type = "error",
-          duration = 5
+          timer = 5000,
+          position = "top-end"
         )
       })
     })
