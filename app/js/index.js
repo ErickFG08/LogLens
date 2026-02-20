@@ -1,5 +1,5 @@
 // ── Theme toggle ────────────────────────────────────────────
-(function () {
+(function initTheme() {
   const STORAGE_KEY = 'loglens-theme';
 
   // Apply saved theme immediately (before paint)
