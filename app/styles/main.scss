@@ -2,43 +2,43 @@
 // LogLens – Adaptive Theme (Light / Dark)
 // ═══════════════════════════════════════════════════════════
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap";
 
 // ── CSS Custom Properties ───────────────────────────────────
 :root {
   --bg-page: #f1f5f9;
-  --bg-surface: #ffffff;
-  --bg-card: #ffffff;
+  --bg-surface: #fff;
+  --bg-card: #fff;
   --bg-elevated: #f8fafc;
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-hover: rgba(0, 0, 0, 0.15);
+  --border-subtle: rgb(0 0 0 / 8%);
+  --border-hover: rgb(0 0 0 / 15%);
   --text-primary: #1e293b;
   --text-muted: #64748b;
   --text-dim: #94a3b8;
-  --scrollbar-thumb: rgba(0, 0, 0, 0.12);
-  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb: rgb(0 0 0 / 12%);
+  --scrollbar-thumb-hover: rgb(0 0 0 / 20%);
   --input-bg: #f8fafc;
-  --input-border: rgba(0, 0, 0, 0.1);
-  --input-focus-bg: #ffffff;
-  --chip-bg: rgba(0, 0, 0, 0.03);
-  --chip-border: rgba(0, 0, 0, 0.08);
-  --chip-hover-bg: rgba(0, 0, 0, 0.06);
-  --chip-hover-border: rgba(0, 0, 0, 0.12);
-  --summary-total-bg: rgba(0, 0, 0, 0.03);
-  --summary-total-border: rgba(0, 0, 0, 0.06);
+  --input-border: rgb(0 0 0 / 10%);
+  --input-focus-bg: #fff;
+  --chip-bg: rgb(0 0 0 / 3%);
+  --chip-border: rgb(0 0 0 / 8%);
+  --chip-hover-bg: rgb(0 0 0 / 6%);
+  --chip-hover-border: rgb(0 0 0 / 12%);
+  --summary-total-bg: rgb(0 0 0 / 3%);
+  --summary-total-border: rgb(0 0 0 / 6%);
   --summary-total-color: #1e293b;
   --table-text: #334155;
-  --table-border: rgba(0, 0, 0, 0.06);
-  --table-stripe: rgba(0, 0, 0, 0.02);
-  --table-highlight: rgba(0, 0, 0, 0.03);
+  --table-border: rgb(0 0 0 / 6%);
+  --table-stripe: rgb(0 0 0 / 2%);
+  --table-highlight: rgb(0 0 0 / 3%);
   --table-header-color: #64748b;
-  --table-header-border: rgba(0, 0, 0, 0.08);
+  --table-header-border: rgb(0 0 0 / 8%);
   --page-btn-bg: transparent;
-  --page-btn-hover-bg: rgba(0, 0, 0, 0.04);
-  --shadow-sm: rgba(0, 0, 0, 0.06);
-  --shadow-md: rgba(0, 0, 0, 0.04);
-  --shadow-lg: rgba(0, 0, 0, 0.03);
-  --notification-shadow: rgba(0, 0, 0, 0.1);
+  --page-btn-hover-bg: rgb(0 0 0 / 4%);
+  --shadow-sm: rgb(0 0 0 / 6%);
+  --shadow-md: rgb(0 0 0 / 4%);
+  --shadow-lg: rgb(0 0 0 / 3%);
+  --notification-shadow: rgb(0 0 0 / 10%);
 }
 
 [data-theme="dark"] {
@@ -46,35 +46,35 @@
   --bg-surface: #1e293b;
   --bg-card: #1e293b;
   --bg-elevated: #334155;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-subtle: rgb(255 255 255 / 8%);
+  --border-hover: rgb(255 255 255 / 15%);
   --text-primary: #e2e8f0;
   --text-muted: #94a3b8;
   --text-dim: #64748b;
-  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
-  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.25);
+  --scrollbar-thumb: rgb(255 255 255 / 15%);
+  --scrollbar-thumb-hover: rgb(255 255 255 / 25%);
   --input-bg: #334155;
-  --input-border: rgba(255, 255, 255, 0.1);
+  --input-border: rgb(255 255 255 / 10%);
   --input-focus-bg: #475569;
-  --chip-bg: rgba(255, 255, 255, 0.06);
-  --chip-border: rgba(255, 255, 255, 0.1);
-  --chip-hover-bg: rgba(255, 255, 255, 0.1);
-  --chip-hover-border: rgba(255, 255, 255, 0.15);
-  --summary-total-bg: rgba(255, 255, 255, 0.06);
-  --summary-total-border: rgba(255, 255, 255, 0.08);
+  --chip-bg: rgb(255 255 255 / 6%);
+  --chip-border: rgb(255 255 255 / 10%);
+  --chip-hover-bg: rgb(255 255 255 / 10%);
+  --chip-hover-border: rgb(255 255 255 / 15%);
+  --summary-total-bg: rgb(255 255 255 / 6%);
+  --summary-total-border: rgb(255 255 255 / 8%);
   --summary-total-color: #e2e8f0;
   --table-text: #cbd5e1;
-  --table-border: rgba(255, 255, 255, 0.06);
-  --table-stripe: rgba(255, 255, 255, 0.03);
-  --table-highlight: rgba(255, 255, 255, 0.05);
+  --table-border: rgb(255 255 255 / 6%);
+  --table-stripe: rgb(255 255 255 / 3%);
+  --table-highlight: rgb(255 255 255 / 5%);
   --table-header-color: #94a3b8;
-  --table-header-border: rgba(255, 255, 255, 0.08);
+  --table-header-border: rgb(255 255 255 / 8%);
   --page-btn-bg: transparent;
-  --page-btn-hover-bg: rgba(255, 255, 255, 0.08);
-  --shadow-sm: rgba(0, 0, 0, 0.3);
-  --shadow-md: rgba(0, 0, 0, 0.25);
-  --shadow-lg: rgba(0, 0, 0, 0.2);
-  --notification-shadow: rgba(0, 0, 0, 0.4);
+  --page-btn-hover-bg: rgb(255 255 255 / 8%);
+  --shadow-sm: rgb(0 0 0 / 30%);
+  --shadow-md: rgb(0 0 0 / 25%);
+  --shadow-lg: rgb(0 0 0 / 20%);
+  --notification-shadow: rgb(0 0 0 / 40%);
 }
 
 // ── Semantic log-level colours (unchanged between themes) ───
@@ -85,12 +85,11 @@ $debug: #7c3aed;
 $trace: #6b7280;
 $stdout: #059669;
 $stderr: #e11d48;
-
-$accent-glow: rgba(37, 99, 235, 0.08);
+$accent-glow: rgb(37 99 235 / 8%);
 
 // ── Global ──────────────────────────────────────────────────
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--bg-page);
@@ -135,7 +134,7 @@ body {
     margin-left: 2px;
     padding: 3px 10px;
     background: $accent-glow;
-    border: 1px solid rgba(37, 99, 235, 0.15);
+    border: 1px solid rgb(37 99 235 / 15%);
     border-radius: 20px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -181,7 +180,7 @@ body {
 // ══════════════════════════════════════════════════════════════
 // SIDEBAR
 // ══════════════════════════════════════════════════════════════
-.bslib-sidebar-layout>.sidebar {
+.bslib-sidebar-layout > .sidebar {
   background: var(--bg-surface) !important;
   border-right: 1px solid var(--border-subtle) !important;
   transition: background 0.35s ease, border-color 0.35s ease;
@@ -276,15 +275,15 @@ body {
   }
 
   &.connected {
-    background: rgba(5, 150, 105, 0.08);
+    background: rgb(5 150 105 / 8%);
     color: $stdout;
-    border: 1px solid rgba(5, 150, 105, 0.18);
+    border: 1px solid rgb(5 150 105 / 18%);
   }
 
   &.disconnected {
-    background: rgba(220, 38, 38, 0.06);
+    background: rgb(220 38 38 / 6%);
     color: $error;
-    border: 1px solid rgba(220, 38, 38, 0.15);
+    border: 1px solid rgb(220 38 38 / 15%);
   }
 }
 
@@ -300,8 +299,8 @@ body {
   transition: all 0.2s ease;
 
   &:focus {
-    border-color: rgba(37, 99, 235, 0.4) !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    border-color: rgb(37 99 235 / 40%) !important;
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 10%) !important;
     background-color: var(--input-focus-bg) !important;
   }
 
@@ -322,24 +321,24 @@ body {
   background: linear-gradient(135deg, $info, darken($info, 8%));
   color: #fff;
   margin-top: 0.5rem;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 2px 8px rgb(37 99 235 / 20%);
   position: relative;
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 20%), transparent);
     transition: left 0.5s ease;
   }
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 6px 20px rgb(37 99 235 / 30%);
     background: linear-gradient(135deg, lighten($info, 6%), $info);
     color: #fff;
 
@@ -350,7 +349,7 @@ body {
 
   &:active {
     transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 2px 8px rgb(37 99 235 / 20%);
   }
 }
 
@@ -456,7 +455,7 @@ body {
 .summary-count {
   font-size: 1.4rem;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   line-height: 1.2;
 }
 
@@ -489,7 +488,7 @@ body {
 
 // ── Filter toggle buttons ───────────────────────────────────
 .filter-btn {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -590,15 +589,15 @@ body {
     font-size: 0.78rem;
     border-radius: 8px;
     padding: 7px 12px;
-    font-family: 'Inter', sans-serif;
+    font-family: Inter, sans-serif;
 
     &::placeholder {
       color: var(--text-dim);
     }
 
     &:focus {
-      border-color: rgba(37, 99, 235, 0.4) !important;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08) !important;
+      border-color: rgb(37 99 235 / 40%) !important;
+      box-shadow: 0 0 0 3px rgb(37 99 235 / 8%) !important;
     }
   }
 }
@@ -611,7 +610,7 @@ body {
 }
 
 .btn-export {
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
   padding: 6px 14px;
@@ -627,7 +626,8 @@ body {
   text-decoration: none;
   letter-spacing: 0.02em;
 
-  .fa, .fas {
+  .fa,
+  .fas {
     font-size: 0.8rem;
   }
 
@@ -671,7 +671,7 @@ body {
   overflow: auto;
 
   .rt-table {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
   }
 
   // Sticky header needs an opaque background so rows don't show through
@@ -705,7 +705,7 @@ body {
       background: $info;
       color: #fff;
       border-color: $info;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 2px 6px rgb(37 99 235 / 20%);
     }
   }
 
@@ -733,7 +733,7 @@ body {
 
   .rt-thead .rt-th {
     color: #94a3b8 !important;
-    border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+    border-bottom-color: rgb(255 255 255 / 8%) !important;
   }
 
   .rt-td {
@@ -747,11 +747,9 @@ body {
   .rt-page-size-select {
     background: #334155 !important;
     color: #94a3b8 !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgb(255 255 255 / 10%) !important;
   }
 }
-
-
 
 // ── Scrollbar ───────────────────────────────────────────────
 ::-webkit-scrollbar {
