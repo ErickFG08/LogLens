@@ -2,6 +2,7 @@
 // LogLens – Adaptive Theme (Light / Dark)
 // ═══════════════════════════════════════════════════════════
 
+@use "sass:color";
 @import "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap";
 
 // ── CSS Custom Properties ───────────────────────────────────
@@ -318,7 +319,7 @@ body {
   border: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 0.02em;
-  background: linear-gradient(135deg, $info, darken($info, 8%));
+  background: linear-gradient(135deg, $info, color.adjust($info, $lightness: -8%));
   color: #fff;
   margin-top: 0.5rem;
   box-shadow: 0 2px 8px rgb(37 99 235 / 20%);
@@ -339,7 +340,7 @@ body {
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgb(37 99 235 / 30%);
-    background: linear-gradient(135deg, lighten($info, 6%), $info);
+    background: linear-gradient(135deg, color.adjust($info, $lightness: 6%), $info);
     color: #fff;
 
     &::before {
@@ -411,12 +412,11 @@ body {
 }
 
 .summary-bar.empty-state {
-  flex-direction: column;
+  flex-flow: column wrap;
   align-items: center;
   justify-content: center;
   padding: 80px 20px;
   text-align: center;
-  flex-wrap: wrap;
   background: transparent;
 
   .empty-icon {
@@ -552,7 +552,7 @@ body {
 .filter-trace.active {
   background: rgba($trace, 0.12);
   border-color: rgba($trace, 0.4);
-  color: darken($trace, 10%);
+  color: color.adjust($trace, $lightness: -10%);
   box-shadow: 0 0 0 2px rgba($trace, 0.1);
 }
 
@@ -582,6 +582,7 @@ body {
     }
   }
 
+  // stylelint-disable-next-line no-descending-specificity
   .form-control {
     background: var(--input-bg) !important;
     border: 1px solid var(--border-subtle) !important;
@@ -723,6 +724,7 @@ body {
 // Reactable's R-side theme applies hardcoded inline styles that
 // don't adapt to dark mode, so we must override with !important.
 [data-theme="dark"] .log-table-container {
+  // stylelint-disable-next-line selector-class-pattern
   .ReactTable {
     color: #e2e8f0 !important;
   }
