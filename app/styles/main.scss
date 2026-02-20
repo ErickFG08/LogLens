@@ -443,6 +443,7 @@ body {
   border-radius: 10px;
   flex: 1 1 0;
   min-width: 0;
+  box-sizing: border-box;
   transition: all 0.2s ease;
   border: 1px solid transparent;
 
